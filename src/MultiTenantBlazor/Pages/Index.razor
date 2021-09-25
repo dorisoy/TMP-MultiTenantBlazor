@@ -1,5 +1,16 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<h1>Hello, MultiTenant!</h1>
 
-Welcome to your new app.
+
+@if (IsReady)
+{
+    <h2>Tenant Info</h2>
+        <ul>
+            <li>Identifier: @tenant?.Identifier</li>
+            <li>Id: @tenant?.Id</li>
+            <li>Name: @tenant?.Name</li>
+            <li>Connection String: @tenant?.ConnectionString</li>
+        </ul>
+}
+

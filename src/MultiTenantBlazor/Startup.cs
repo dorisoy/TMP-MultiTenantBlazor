@@ -1,7 +1,8 @@
-using BlazorTemplates.ServerSide.Areas.Identity;
-using BlazorTemplates.ServerSide.Data;
-using BlazorTemplates.ServerSide.Helpers.Identity;
-using BlazorTemplates.ServerSide.Helpers.Middleware;
+using MultiTenantBlazor.Areas.Identity;
+using MultiTenantBlazor.Data;
+using MultiTenantBlazor.Helpers.Identity;
+using MultiTenantBlazor.Helpers.Middleware;
+using Finbuckle.MultiTenant;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -18,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorTemplates.ServerSide
+namespace MultiTenantBlazor
 {
     public class Startup
     {
@@ -34,11 +35,12 @@ namespace BlazorTemplates.ServerSide
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+
+               options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 options.EnableSensitiveDataLogging();
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     sqlServerOptions => sqlServerOptions.CommandTimeout(int.MaxValue));
-            }, ServiceLifetime.Transient);
+                }, ServiceLifetime.Transient);
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
@@ -53,12 +55,17 @@ namespace BlazorTemplates.ServerSide
                 o.DetailedErrors = true;
             });
 
+            services.RegisterApplicationSpecificServices(Configuration);
+
+            services.AddMultiTenant<TenantInfo>()
+                    .WithConfigurationStore()
+                    .WithHostStrategy("__tenant__.*");
+
             services.AddHttpContextAccessor();
 
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.RegisterApplicationSpecificServices(Configuration);
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -78,6 +85,8 @@ namespace BlazorTemplates.ServerSide
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseMultiTenant();
 
             app.UseAuthentication();
             app.UseAuthorization();
