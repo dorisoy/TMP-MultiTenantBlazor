@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace BlazorTemplates.ServerSide.Data.Migrations
+namespace MultiTenantBlazor.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {

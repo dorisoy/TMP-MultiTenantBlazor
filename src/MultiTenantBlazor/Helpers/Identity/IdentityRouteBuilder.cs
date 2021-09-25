@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorTemplates.ServerSide.Helpers.Identity
+namespace MultiTenantBlazor.Helpers.Identity
 {
     public static class IdentityRouteBuilder
     {

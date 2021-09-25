@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorTemplates.ServerSide.Data
+namespace MultiTenantBlazor.Data
 {
     public abstract class CoreDbBaseOperations
     {

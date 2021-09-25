@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorTemplates.ServerSide.Data.Seed.Identity
+namespace MultiTenantBlazor.Data.Seed.Identity
 {
     public class IdentityUserConfiguration : IEntityTypeConfiguration<IdentityUser>
     {

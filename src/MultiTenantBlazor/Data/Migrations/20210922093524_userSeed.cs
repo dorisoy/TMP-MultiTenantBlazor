@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BlazorTemplates.ServerSide.Data.Migrations
+namespace MultiTenantBlazor.Data.Migrations
 {
     public partial class userSeed : Migration
     {

@@ -1,11 +1,11 @@
-﻿using BlazorTemplates.ServerSide.Data.Seed.Identity;
+﻿using MultiTenantBlazor.Data.Seed.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorTemplates.ServerSide.Data
+namespace MultiTenantBlazor.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {

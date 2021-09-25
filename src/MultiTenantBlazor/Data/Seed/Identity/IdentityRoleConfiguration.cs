@@ -1,4 +1,4 @@
-﻿using BlazorTemplates.ServerSide.Helpers.Enums.Identity;
+﻿using MultiTenantBlazor.Helpers.Enums.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorTemplates.ServerSide.Data.Seed.Identity
+namespace MultiTenantBlazor.Data.Seed.Identity
 {
     public class IdentityRoleConfiguration : IEntityTypeConfiguration<IdentityRole>
     {

@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "BlazorTemplates.ServerSide": {
+    "MultiTenantBlazor": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

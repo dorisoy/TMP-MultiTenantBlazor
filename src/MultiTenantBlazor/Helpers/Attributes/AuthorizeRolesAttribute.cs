@@ -1,11 +1,11 @@
-﻿using BlazorTemplates.ServerSide.Helpers.Enums.Identity;
+﻿using MultiTenantBlazor.Helpers.Enums.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorTemplates.ServerSide.Helpers.Attributes
+namespace MultiTenantBlazor.Helpers.Attributes
 {
     public class AuthorizeRolesAttribute : AuthorizeAttribute
     {
