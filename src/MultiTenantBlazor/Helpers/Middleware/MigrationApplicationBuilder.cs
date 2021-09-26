@@ -31,7 +31,9 @@ namespace MultiTenantBlazor.Helpers.Middleware
 
                 foreach (var tenant in allTenants)
                 {
-                    using (var db = new ApplicationDbContext(tenant, new DbContextOptions<ApplicationDbContext>()))
+                    var dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>();
+                    var sqlOptions = dbOptions.UseSqlServer(tenant.ConnectionString).Options;
+                    using (var db = new ApplicationDbContext(tenant, sqlOptions))
                     {
                         db.Database.Migrate();
                     }
