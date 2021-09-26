@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MultiTenantBlazor.Models.Configuration;
 
 namespace MultiTenantBlazor.Helpers.Middleware
 {
@@ -18,6 +19,8 @@ namespace MultiTenantBlazor.Helpers.Middleware
                 .Where(x => x.Name.EndsWith("Repository") ||
                             x.Name.EndsWith("Service"))
                 .AsPublicImplementedInterfaces();
+
+            services.Configure<TenantList>(config.GetSection("Finbuckle:MultiTenant:Stores:ConfigurationStore"));
 
             return services;
         }

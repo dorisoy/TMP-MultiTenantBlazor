@@ -4,14 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Finbuckle.MultiTenant;
+using Microsoft.Extensions.Options;
 
 namespace MultiTenantBlazor.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        private ITenantInfo TenantInfo { get; set; }
+
+        public ApplicationDbContext(ITenantInfo tenantInfo, DbContextOptions<ApplicationDbContext> options)
             : base(options)
-        {}
+        {
+            TenantInfo = tenantInfo;
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

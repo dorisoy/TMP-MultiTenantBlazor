@@ -21,9 +21,7 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Models\Configuration\" />
     <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 

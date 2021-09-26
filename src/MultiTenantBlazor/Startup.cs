@@ -18,6 +18,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
 
 namespace MultiTenantBlazor
 {
@@ -33,14 +36,24 @@ namespace MultiTenantBlazor
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            
+            services.AddRazorPages();
+            services.AddServerSideBlazor().AddCircuitOptions(o =>
             {
+                o.DetailedErrors = true;
+            });
 
-               options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                options.EnableSensitiveDataLogging();
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                    sqlServerOptions => sqlServerOptions.CommandTimeout(int.MaxValue));
-                }, ServiceLifetime.Transient);
+            // This registers all services and repositories and binds configuration
+            services.RegisterApplicationSpecificServices(Configuration);
+            services.AddHttpContextAccessor();
+
+            services.AddMultiTenant<TenantInfo>()
+                    .WithConfigurationStore()
+                    .WithHostStrategy("__tenant__.*")
+                    .WithPerTenantAuthentication();
+
+            // This is responsible to configuring the DbContext for Multi-tenancy. See within for additional comments.
+            services.AddMultiTenantDbContext(Configuration);
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
@@ -49,20 +62,6 @@ namespace MultiTenantBlazor
             services.Configure<DataProtectionTokenProviderOptions>(
                     x => x.TokenLifespan = TimeSpan.FromDays(7));
 
-            services.AddRazorPages();
-            services.AddServerSideBlazor().AddCircuitOptions(o =>
-            {
-                o.DetailedErrors = true;
-            });
-
-            services.RegisterApplicationSpecificServices(Configuration);
-
-            services.AddMultiTenant<TenantInfo>()
-                    .WithConfigurationStore()
-                    .WithHostStrategy("__tenant__.*");
-
-            services.AddHttpContextAccessor();
-
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
             
@@ -70,6 +69,7 @@ namespace MultiTenantBlazor
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -87,6 +87,9 @@ namespace MultiTenantBlazor
             app.UseRouting();
 
             app.UseMultiTenant();
+            // This will migrate and update the Db for every tenant within app settings. See within for additional comments.
+            app.DbMigrationRunner();
+           
 
             app.UseAuthentication();
             app.UseAuthorization();
