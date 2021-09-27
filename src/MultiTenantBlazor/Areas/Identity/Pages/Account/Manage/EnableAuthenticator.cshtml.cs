@@ -148,7 +148,7 @@ namespace MultiTenantBlazor.Areas.Identity.Pages.Account.Manage
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("Blazor Templates"),
+                _urlEncoder.Encode("MultiTenantBlazor"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }
