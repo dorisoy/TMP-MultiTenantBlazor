@@ -8,7 +8,9 @@ The solution is split a single project within the src folder:
 - MultiTenantBlazor
 
 It uses the Finbuckle.MultiTenant.AspNetCore NuGet package for most of the tenant configuration but also supports EF Core tooling* and migrations*.
-Tenants are defined in appsettings under "Finbuckle:MultiTenant:Stores:ConfigurationStore". There is an array of "Tenants" which contains the id, identifier, name and connection string of its DB. The first tenant within the array must be kept as localhost as it is used in development and when you need to us EF Core tooling to create migrations. The ForceLocalOnlyDbConnection value will force only the localhost (1st tenant) Db connection. This is so you can use the previously mentioned tooling otherwise you will get null reference exceptions. It's also used for continuous development as you can test with the localhost tenant first before pushing out any changes. To push out the migrations across all tenants as well as each tenant having their own DB connection change ForceLocalOnlyDbConnection to false. This is handled at startup by:
+Tenants are defined in appsettings under "Finbuckle:MultiTenant:Stores:ConfigurationStore". There is an array of "Tenants" which contains the id, identifier, name and connection string of its DB. The first tenant within the array must be kept as localhost as it is used in development and when you need to us EF Core tooling to create migrations. 
+
+The ApplyDbMigrationsOnStartup value will apply all migrations across all tenant DBs (including localhost). Regardless of this option you can still use EF Core tooling commands like "Add-Migration". Doing this will default the migration to the localhost tenant (1st tenant in above mentioned array). Setting as true ApplyDbMigrationsOnStartup will apply to every tenant. This is handled at startup by:
 
 ```
 // See: MultiTenantBlazor.Helpers.Middleware.MigrationApplicationBuilder.cs
@@ -23,8 +25,8 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 
 In summary:
 
-- ForceLocalOnlyDbConnection = true in local testing where multitenant connections aren't required
-- ForceLocalOnlyDbConnection = false in production or testing different tenant DBs
+- ApplyDbMigrationsOnStartup = true will apply all migrations to all tenants including localhost
+- ApplyDbMigrationsOnStartup = false will apply all migrations to localhost tenant only. You still have the ability to move between tenants and use other Dbs thoughs (assuming the exist and have the required migrations to execute your code).
 
 
 You can access a different tenant by ammending and adding a subdomain that matches the tenant's name. For example:
