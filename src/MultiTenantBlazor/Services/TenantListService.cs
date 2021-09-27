@@ -18,9 +18,9 @@ namespace MultiTenantBlazor.Services
     {
         private IHttpContextAccessor _httpContextAccessor;
         private TenantList _tenantList;
-        public TenantListService(IOptions<TenantList> tenantList, IHttpContextAccessor httpContextAccessor)
+        public TenantListService(IOptionsMonitor<TenantList> tenantList, IHttpContextAccessor httpContextAccessor)
         {
-            _tenantList = tenantList.Value;
+            _tenantList = tenantList.CurrentValue;
             _httpContextAccessor = httpContextAccessor;
         }
 
