@@ -18,17 +18,14 @@ namespace MultiTenantBlazor.Helpers.Middleware
     {
         public static IServiceCollection AddMultiTenantDbContext(this IServiceCollection services, IConfiguration config)
         {
-            // This is used so we can use EF Core migrations. You can use the Package Manager Console to create new migrations without any compile errors if this is true.
-            // You can re-enable after migrations by this being false. If false it will connect to individual tenant DBs.
-            // If this is also false the application will also migrate all migrations per tenant DB. See app.DbMigrationRunner() in startup.
-
-            var forceLocalOnlyDbConnection = config.GetValue<bool>("Finbuckle:MultiTenant:Stores:ConfigurationStore:ForceLocalOnlyDbConnection");
+            // This is used so we can use EF Core migrations. If the HttpContext is null (like using EF Core tooling) then we'll use the first tenant connection string (localhost).
+            // Migrations are applied on startup to all tenants dependent on configuration. See Helpers > Middleware > MigrationApplicationBuilder.cs
 
             services.AddDbContext<ApplicationDbContext>((services, options) => {
-                var env = services.GetRequiredService<IWebHostEnvironment>();
-                if (!forceLocalOnlyDbConnection)
+                var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
+                if (httpContextAccessor.HttpContext != null)
                 {
-                    var currentTenant = services.GetService<IHttpContextAccessor>().HttpContext.GetMultiTenantContext<TenantInfo>()?.TenantInfo;
+                    var currentTenant = httpContextAccessor.HttpContext.GetMultiTenantContext<TenantInfo>()?.TenantInfo;
                     options.UseSqlServer(currentTenant.ConnectionString, sqlServerOptions => sqlServerOptions.CommandTimeout(int.MaxValue));
                 }
                 else

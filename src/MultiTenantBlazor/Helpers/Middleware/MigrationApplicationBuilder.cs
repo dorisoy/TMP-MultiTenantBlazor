@@ -18,13 +18,13 @@ namespace MultiTenantBlazor.Helpers.Middleware
 
         public static IApplicationBuilder DbMigrationRunner(this IApplicationBuilder app)
         {
-            // This will update all tenant's databases with the current migrations. You can stop this if forceLocalOnlyDbConnection is false.
-            // This setting is mainly for local testing but also to enable individual migrations using standard EF Core tooling.
+            // This will update all tenant's databases with the current migrations. This is based on the ApplyDbMigrationsOnStartup configuration in appsettings.
+            // If this is true all tenant DBs will be updated (including localhost). If false then you can use standard EF Core tooling to create, update and remove migrations.
 
             var config = app.ApplicationServices.GetRequiredService<IConfiguration>();
-            var forceLocalOnlyDbConnection = config.GetValue<bool>("Finbuckle:MultiTenant:Stores:ConfigurationStore:ForceLocalOnlyDbConnection");
+            var applyMigrationsOnStartup = config.GetValue<bool>("Finbuckle:MultiTenant:Stores:ConfigurationStore:ApplyDbMigrationsOnStartup");
 
-            if (!forceLocalOnlyDbConnection)
+            if (applyMigrationsOnStartup)
             {
                 var _tenantService = app.ApplicationServices.GetRequiredService<ITenantListService>();
                 var allTenants = _tenantService.GetAllTenants();
@@ -39,7 +39,6 @@ namespace MultiTenantBlazor.Helpers.Middleware
                     }
                 }
             }
-            
 
             return app;
         }
