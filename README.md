@@ -40,7 +40,9 @@ See Executing to note the required steps you need to do in order to successfully
 
 To test and execute this locally requires additional steps.
 
-To do this you will need to adjust your host file on your machine to resolve the subdomains:
+To do this you will need to adjust your host file on your machine to resolve the tenant subdomains. You can either:
+- Run updateHosts.bat as administrator within the tools subfolder (Recommended)
+- Add this manually like below:
 ``` 
 # localhost name resolution is handled within DNS itself.
 #	127.0.0.1       localhost
@@ -49,6 +51,10 @@ To do this you will need to adjust your host file on your machine to resolve the
 # Added for multitenant testing
 127.0.0.1       tenant1.localhost tenant2.localhost tenant3.localhost
 ``` 
+
+If you run the updateHosts.bat it will look for this entry: "# Added for MultiTenantBlazor testing"
+If it exists it will not update the host file. If it doesn't it will add tenant1, 2 and 3 on a single line.
+
 
 After this you will need to build the application and go to .vs\MultiTenantBlazor\config\applicationhost.config and adjust the bindings.
 ``` 
@@ -80,6 +86,3 @@ There is also deleteUrlACLs.bat if you want to remove the URL ACLs.
 - Microsoft.AspNetCore.Identity.UI
 - Microsoft.EntityFrameworkCore.SqlServer
 - Microsoft.EntityFrameworkCore.Tools
-
-
-
