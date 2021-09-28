@@ -12,7 +12,7 @@ Tenants are defined in appsettings under "Finbuckle:MultiTenant:Stores:Configura
 
 The ApplyDbMigrationsOnStartup value will apply all migrations across all tenant DBs (including localhost). Regardless of this option you can still use EF Core tooling commands like "Add-Migration". Doing this will default the migration to the localhost tenant (1st tenant in above mentioned array). Setting as true ApplyDbMigrationsOnStartup will apply to every tenant. This is handled at startup by:
 
-```
+```cs
 // See: MultiTenantBlazor.Helpers.Middleware.MigrationApplicationBuilder.cs
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
@@ -57,7 +57,7 @@ If it exists it will not update the host file. If it doesn't it will add tenant1
 
 
 After this you will need to build the application and go to .vs\MultiTenantBlazor\config\applicationhost.config and adjust the bindings.
-``` 
+``` xml
 <bindings>
           <binding protocol="http" bindingInformation="*:42973:localhost" />
           <binding protocol="http" bindingInformation="*:42973:tenant1.localhost" />
